@@ -2,31 +2,27 @@ pipeline {
     agent any
 
     stages {
-
         stage('Setup') {
             steps {
-                echo 'Using Docker Python environment'
+                echo 'Starting ML Pipeline'
             }
         }
 
-        stage('Train') {
+        stage('Install Dependencies') {
             steps {
-                sh '''
-                docker run --rm -v $(pwd):/app -w /app python:3.9 \
-                sh -c "pip install -r requirements.txt && python train.py"
-                '''
+                sh 'pip install -r requirements.txt'
             }
         }
 
-        stage('Identity') {
+        stage('Train Model') {
             steps {
-                echo 'Student: P. Revanth Reddy | Roll No: L22BCS016'
+                sh 'python train.py'
             }
         }
 
-        stage('Archive') {
+        stage('Archive Model') {
             steps {
-                archiveArtifacts artifacts: 'model.pkl, metrics.json'
+                archiveArtifacts artifacts: '*.pkl', fingerprint: true
             }
         }
     }

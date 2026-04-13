@@ -1,18 +1,21 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'python:3.9'
+        }
+    }
 
     stages {
 
         stage('Setup') {
             steps {
-                sh 'python3 -m pip install --upgrade pip'
-                sh 'python3 -m pip install -r requirements.txt'
+                sh 'pip install -r requirements.txt'
             }
         }
 
         stage('Train') {
             steps {
-                sh 'python3 train.py'
+                sh 'python train.py'
             }
         }
 
@@ -24,7 +27,7 @@ pipeline {
 
         stage('Archive') {
             steps {
-                archiveArtifacts artifacts: 'model.pkl, metrics.json', fingerprint: true
+                archiveArtifacts artifacts: 'model.pkl, metrics.json'
             }
         }
     }

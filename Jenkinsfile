@@ -1,17 +1,19 @@
 pipeline {
-    agent any
+    agent {
+        dockerfile true
+    }
 
     stages {
 
         stage('Setup') {
             steps {
-                echo 'Setup complete'
+                echo 'Installing dependencies using Dockerfile'
             }
         }
 
         stage('Train') {
             steps {
-                sh 'python3 train.py || python train.py'
+                sh 'python train.py'
             }
         }
 

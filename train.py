@@ -1,36 +1,32 @@
 import pandas as pd
-import joblib
-import json
-import os
-from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
+import pickle
+import json
 
-# Load dataset
-df = pd.read_csv("dataset/winequality-red.csv", sep=";")
+from sklearn.datasets import load_wine
+data = load_wine()
 
-X = df.drop("quality", axis=1)   # 11 features
-y = df["quality"]
+X = data.data
+y = data.target
 
-# Train-test split
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=42
-)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 
-# Train model
-model = LogisticRegression(max_iter=1000)
+model = LinearRegression()
 model.fit(X_train, y_train)
 
-# Evaluate
-preds = model.predict(X_test)
-acc = accuracy_score(y_test, preds)
+y_pred = model.predict(X_test)
 
-# Save model
-os.makedirs("models", exist_ok=True)
-joblib.dump(model, "models/model.pkl")
+mse = mean_squared_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
 
-# Save metrics
+print("MSE:", mse)
+print("R2:", r2)
+
+with open("model.pkl", "wb") as f:
+    pickle.dump(model, f)
+
+metrics = {"mse": mse, "r2": r2}
 with open("metrics.json", "w") as f:
-    json.dump({"accuracy": acc}, f)
-
-print("Training completed. Accuracy:", acc)
+    json.dump(metrics, f)

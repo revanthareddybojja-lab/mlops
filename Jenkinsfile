@@ -1,5 +1,9 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'python:3.9'
+        }
+    }
 
     stages {
 
@@ -11,7 +15,7 @@ pipeline {
 
         stage('Train') {
             steps {
-                sh 'python3 train.py || python train.py'
+                sh 'python train.py'
             }
         }
 

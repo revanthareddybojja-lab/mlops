@@ -5,16 +5,16 @@ pipeline {
 
         stage('Setup') {
             steps {
-                sh 'python3 --version || true'
-                sh 'python3 -m ensurepip || true'
-                sh 'python3 -m pip install --user --upgrade pip'
-                sh 'python3 -m pip install --user -r requirements.txt'
+                echo 'Using Docker Python environment'
             }
         }
 
         stage('Train') {
             steps {
-                sh 'python3 train.py'
+                sh '''
+                docker run --rm -v $(pwd):/app -w /app python:3.9 \
+                sh -c "pip install -r requirements.txt && python train.py"
+                '''
             }
         }
 

@@ -5,13 +5,14 @@ pipeline {
 
         stage('Setup') {
             steps {
-                sh 'pip install -r requirements.txt'
+                sh 'python3 -m pip install --upgrade pip'
+                sh 'python3 -m pip install -r requirements.txt'
             }
         }
 
         stage('Train') {
             steps {
-                sh 'python train.py'
+                sh 'python3 train.py'
             }
         }
 
@@ -23,7 +24,7 @@ pipeline {
 
         stage('Archive') {
             steps {
-                archiveArtifacts artifacts: 'model.pkl, metrics.json'
+                archiveArtifacts artifacts: 'model.pkl, metrics.json', fingerprint: true
             }
         }
     }

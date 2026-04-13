@@ -1,21 +1,17 @@
 pipeline {
-    agent {
-        docker {
-            image 'python:3.9'
-        }
-    }
+    agent any
 
     stages {
 
         stage('Setup') {
             steps {
-                sh 'pip install -r requirements.txt'
+                sh 'python3 -m pip install -r requirements.txt || python -m pip install -r requirements.txt'
             }
         }
 
         stage('Train') {
             steps {
-                sh 'python train.py'
+                sh 'python3 train.py || python train.py'
             }
         }
 

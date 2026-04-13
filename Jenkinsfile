@@ -5,12 +5,10 @@ pipeline {
 
         stage('Setup') {
             steps {
-                sh '''
-                apt-get update
-                apt-get install -y python3 python3-pip
-                pip3 install --upgrade pip
-                pip3 install -r requirements.txt
-                '''
+                sh 'python3 --version || true'
+                sh 'python3 -m ensurepip || true'
+                sh 'python3 -m pip install --user --upgrade pip'
+                sh 'python3 -m pip install --user -r requirements.txt'
             }
         }
 

@@ -2,41 +2,31 @@ pipeline {
     agent any
 
     stages {
-        stage('Setup Pip (No Permission Needed)') {
+
+        stage('Setup') {
+            steps {
+                echo 'No dependencies required'
+            }
+        }
+
+        stage('Train') {
             steps {
                 sh '''
-                python3 - <<EOF
-import urllib.request
-url = "https://bootstrap.pypa.io/get-pip.py"
-urllib.request.urlretrieve(url, "get-pip.py")
-EOF
-
-                python3 get-pip.py --user
+                docker run --rm -v $(pwd):/app -w /app python:3.9 \
+                python train.py
                 '''
             }
         }
 
-        stage('Install Dependencies') {
+        stage('Identity') {
             steps {
-                sh '''
-                export PATH=$HOME/.local/bin:$PATH
-                pip install -r requirements.txt
-                '''
+                echo 'Student: P. Revanth Reddy | Roll No: L22BCS016'
             }
         }
 
-        stage('Train Model') {
+        stage('Archive') {
             steps {
-                sh '''
-                export PATH=$HOME/.local/bin:$PATH
-                python3 train.py
-                '''
-            }
-        }
-
-        stage('Archive Model') {
-            steps {
-                archiveArtifacts artifacts: '*.pkl', fingerprint: true
+                archiveArtifacts artifacts: 'model.pkl, metrics.json'
             }
         }
     }

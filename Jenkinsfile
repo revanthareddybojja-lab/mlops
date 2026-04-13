@@ -17,7 +17,7 @@ pipeline {
 
         stage('Identity') {
             steps {
-                echo 'Student: P. Revanth Reddy | Roll No: 2022BCS0210'
+                echo 'Student: B. Revanth Reddy | Roll No: 2022BCS0210'
             }
         }
 

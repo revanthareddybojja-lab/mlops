@@ -1,29 +1,33 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'python:3.9'
+        }
+    }
 
     stages {
 
         stage('Setup') {
             steps {
-                echo 'Setup stage completed'
+                sh 'pip install -r requirements.txt'
             }
         }
 
         stage('Train') {
             steps {
-                echo 'Execution Completed'
+                sh 'python train.py'
             }
         }
 
         stage('Identity') {
             steps {
-                echo 'Student: B. Revanth Reddy | Roll No: 2022BCS0210'
+                echo 'Student: P. Revanth Reddy | Roll No: L22BCS016'
             }
         }
 
         stage('Archive') {
             steps {
-                echo 'Artifacts simulated'
+                archiveArtifacts artifacts: 'model.pkl, metrics.json'
             }
         }
     }
